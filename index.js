@@ -14,11 +14,10 @@ const client = new Discord.Client({
 });
 
 client.on('ready',  (clientReady) =>{
-    // const welcomeChannel = client.channels.fetch(config.WELCOME_CHANNEL_ID).then (channel => 
-    //     {
-    //         channel.send({embeds: welcomeMessages.welcomeEmbed()})
-
-    //     })
+    client.channels.fetch(config.WELCOME_CHANNEL_ID).then(channel => 
+    {
+        channel.send({embeds: welcomeMessages.welcomeEmbed()})
+    })
 
         // const safetyChannel = client.channels.fetch(config.SAFETY_CHANNEL_ID).then (channel => 
         //     {
@@ -32,7 +31,10 @@ client.on('messageCreate', message =>{
     console.log(message.content)
     if (message.content.includes("GM")) {
         message.react('👋')
-        console.log("going to reply");
+    }
+    if (message.content.includes("ping")) {
+        console.log("pong");
+        message.reply('pong')
     }
 })
 
