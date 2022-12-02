@@ -7,6 +7,7 @@ const config = require("./config.json");
         .setTitle('Welcome to Bat Brigade')
         .setImage('https://cdn.discordapp.com/attachments/1029463141983211593/1029463175663452210/90193704_p0_master1200.png')
         .setDescription('Hey, I\'m Bat Chan, Welcome to the BAT Brigade! We are the official Brave and BAT community on Discord.')
+        .setFooter({text:'Art Credits: https://brave-tan.moe/'})
         
         const embed2 = new Discord.EmbedBuilder()
         .setColor(0x0099FF)
@@ -17,7 +18,7 @@ const config = require("./config.json");
         We also have weekly community calls from the Brave team that gives us updates on where Brave is going, what they are planning on doing etc. 
         
         Again, you can use the <#`+config.EVENTS_CALENDAR_CHANNEL_ID+`> to give yourself a reminder for these calls.`)
-        
+        .setFooter({text:'Art Credits: User MaThD3D'})
     
         const embed3 = new Discord.EmbedBuilder()
         .setColor(0x0099FF)
@@ -27,13 +28,19 @@ const config = require("./config.json");
         If you want to help spread the word on Brave and BAT, then you can join the BAT Elites programme. Please contact <@`+config.ACE_LOLZ_USER_ID+`> if you are interested. 
         Once you get the BAT elites role, you can then post in the <#`+config.ELITES_CHANNEL_ID+`> channel. 
         You can retweet the tweets in the channel. You can also post your tweets in the channel and other users will retweet it for you. `)
-        
+        .setFooter({text:'Art Credits: User BelladoneDC'})
     
         const embed4 = new Discord.EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Beta Testing')
         .setDescription('The BAT Brigade also gets access to beta programs like Brave Talk and Brave Search last year so if you wanna get first dibs on stuff like this, the BAT Brigade is THE place to be.    ')
         
+        const embed5 = new Discord.EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('Verification')
+        .setDescription(`We use <@`+config.CAPTCHA_BOT_USER_ID+`> for verification. If you haven't recieved a DM from him you can also verify by pressing the button below!`)
+        
+
         return [embed1, embed2, embed3, embed4]
     }
 
