@@ -52,14 +52,20 @@ client.on('ready',  (clientReady) =>{
 
     //     })
     // });
-    // client.channels.fetch(config.NFT_INFO_CHANNEL_ID).then(channel => 
-    //     {
-    //         channel.send({
-    //             embeds: NFTInfoEmbed.NFTInfoEmbed()
-    //         }).then(sentMessage =>  {
+
+    client.channels.fetch(config.NFT_INFO_CHANNEL_ID).then(channel => 
+        {
+            channel.messages.fetch('1060316513048985640').then(message =>{
+                message.edit({
+                    embeds: NFTInfoEmbed()
+                })
+            })
+            // channel.send({
+            //     embeds: NFTInfoEmbed()
+            // }).then(sentMessage =>  {
     
-    //         })
-    //     });
+            // })
+        });
         // const MessageButtonCollector = channel.createMessageComponentCollector()
         // console.log("created button hook")
         // MessageButtonCollector.on('collect', interaction => {
@@ -82,7 +88,7 @@ client.on('ready',  (clientReady) =>{
 
         // const safetyChannel = client.channels.fetch(config.SAFETY_CHANNEL_ID).then (channel => 
         //     {
-        //         channel.send({embeds: safetyMessages.safetyEmbed()})
+        //         channel.send({embeds: safetyMessages.safetyEmbed1()})
     
         //     })
         // const rulesChannel = client.channels.fetch(config.RULE_CHANNEL_ID).then (channel => 
@@ -103,6 +109,9 @@ client.on('messageCreate', message =>{
     if (messageContent.includes(" gn ") || messageContent.startsWith("gn") || messageContent.endsWith("gn")) {
         message.react('845061305874513931')
     }
+    if (messageContent.includes(" wen ") || messageContent.startsWith("wen") || messageContent.endsWith("wen")){
+        message.reply('<:wen:1049723300739297310>')
+    }//<:emoji name:emoji id> emoji_name:emoji_id
     if (messageContent === "ping") {
         console.log("pong");
         message.reply('pong')
