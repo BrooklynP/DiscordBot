@@ -1,9 +1,13 @@
 import Discord from "discord.js"
-
+//https://cdn.discordapp.com/attachments/1023520486132563988/1082030516468973628/Brigade_banner.png
 export function welcomeEmbed() {
+    const embed0 = new Discord.EmbedBuilder()
+    .setColor(0x662D91)
+    .setImage('https://cdn.discordapp.com/attachments/1023520486132563988/1082046285525307442/Brigade_banner.png')
+
     const embed1 = new Discord.EmbedBuilder()
         .setColor(0xFF4724)
-        .setTitle('👋 Welcome to the Bat Brigade!')
+        .setTitle('👋 Welcome to the BAT Brigade!')
         // .setImage('https://cdn.discordapp.com/attachments/1029463141983211593/1029463175663452210/90193704_p0_master1200.png')
         .setDescription(`We are the home of the Brave Browser and Basic Attention Token ($BAT) on Discord.
         
@@ -47,5 +51,5 @@ export function welcomeEmbed() {
         ⦁ After you verify, please check out our role selection where you can pick what you want to be pinged about and learn more about the server.
 
         Thank you for joining our community! If you have any questions or concerns, please reach out to a member of our team. <:BatFistBump:931627619114422292>`)
-    return [embed1, embed2, embed3, embed4, embed5]
+    return [embed0, embed1, embed2, embed3, embed4, embed5]
 }
