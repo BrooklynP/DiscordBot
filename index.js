@@ -1,9 +1,12 @@
-const Discord = require("discord.js");
-const config = require("./config.json");
-const welcomeMessages = require("./welcomeMessages.js")
-const safetyMessages = require("./safetyMessages.js")
-const ruleMessages = require("./ruleMessages.js");
-const {NFTInfoEmbed,getOriginalSaleInfoEmbed,getNFTStatsEmbed, getSecondaryInfoEmbed, getVerificationGuideEmbed, getBlogPostEmbed, getUtilityEmbed, getSageInfoEmbed} = require("./NFTInfoMessages");
+import Discord from "discord.js"
+import config from "./config.json" assert { type: "json" };
+// import welcomeMessages from "./welcomeMessages.js"
+import * as welcomeEmbed from "./welcomeMessagesnew.js"
+// import safetyMessages from "./safetyMessages.js"
+// import ruleMessages from "./ruleMessages.js"
+// import *  as NFTInfo from "./NFTInfoMessages" 
+import http from 'http'
+import fetch from 'node-fetch'
 
 const client = new Discord.Client({
     intents: [
@@ -16,8 +19,47 @@ const client = new Discord.Client({
 });
 client.login(config.BOT_TOKEN);
 
+const postData = JSON.stringify( { "condition": { "display_name": "BAT x Adam Ape for Brave" } })
+const options = {
+    // hostname: 'https://beta.api.solanalysis.com',
+    // path: '/rest/get-project-stat-by-name',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    //   'Content-Length': Buffer.byteLength(postData),
+      'Authorization': config.HYPERSPACE_AUTH_TOKEN
+    },
+    body: postData
+  };
+
+async function GetProjectStats(){
+    const response = await fetch('https://beta.api.solanalysis.com/rest/get-project-stat-by-name', options)
+    return response.json();
+}
+
 client.on('ready',  (clientReady) =>{
-    client.user.setPresence({activities:[{name: 'Brave Browser'}]})
+    GetProjectStats().then((stats=>{
+        console.log(stats);     
+        // client.user.setPresence({activities:[{name: 'Floor Price: ' + stats.project_stats[0].floor_price + 'SOL'}]})
+        client.user.setActivity('Floor Price: ' + stats.project_stats[0].floor_price + 'SOL')
+    }))
+    // const request = http.request(options, (response) => {
+    //     response.setEncoding('utf8');
+    
+    //     response.on('data', (chunk) => {
+    //       data += chunk;
+    //     });
+    
+    //     response.on('end', () => {
+    //       console.log(data);
+    //     });
+    //   });
+    // request.on('error', (error) => {
+    //     console.error(error);
+    // });
+    // request.write(postData);
+    // request.end();
+
     // console.log("running")
     // let batbromessageID = '1035653394217582603'
     // let batbrochannelID = '846472323250257951'
@@ -53,19 +95,19 @@ client.on('ready',  (clientReady) =>{
     //     })
     // });
 
-    client.channels.fetch(config.NFT_INFO_CHANNEL_ID).then(channel => 
-        {
-            channel.messages.fetch('1060316513048985640').then(message =>{
-                message.edit({
-                    embeds: NFTInfoEmbed()
-                })
-            })
-            // channel.send({
-            //     embeds: NFTInfoEmbed()
-            // }).then(sentMessage =>  {
+    // client.channels.fetch(config.NFT_INFO_CHANNEL_ID).then(channel => 
+    //     {
+    //         channel.messages.fetch('1060316513048985640').then(message =>{
+    //             message.edit({
+    //                 embeds: NFTInfoEmbed()
+    //             })
+    //         })
+    //         // channel.send({
+    //         //     embeds: NFTInfoEmbed()
+    //         // }).then(sentMessage =>  {
     
-            // })
-        });
+    //         // })
+    //     });
         // const MessageButtonCollector = channel.createMessageComponentCollector()
         // console.log("created button hook")
         // MessageButtonCollector.on('collect', interaction => {
@@ -96,6 +138,20 @@ client.on('ready',  (clientReady) =>{
         //         channel.send({embeds: ruleMessages.ruleEmbed()})
     
         //     })
+        // client.channels.fetch(config.WELCOME_CHANNEL_ID).then (channel => 
+        //     {
+        //         channel.send({embeds: welcomeEmbed.welcomeEmbed()})
+    
+        //     })
+
+            //1023520486132563988 server makeover channel
+
+        // client.channels.fetch(config.WELCOME_CHANNEL_ID).then(channel => 
+        // {
+        //     channel.messages.fetch('1035236461924077588').then(message =>{
+        //         message.edit({embeds: welcomeEmbed.welcomeEmbed()})
+        //     })
+        // });
 })
 
 client.on('messageCreate', message =>{
@@ -117,43 +173,43 @@ client.on('messageCreate', message =>{
         message.reply('pong')
     }
 
-    if(messageContent.startsWith("!")){
-        let embeds = []
-        switch(messageContent){
-            case "!nft_sale":
-                embeds = getOriginalSaleInfoEmbed()
-                break;
-            case "!nft_stats":
-                embeds = getNFTStatsEmbed()
-                break;
-            case "!nft_secondary":
-                embeds = getSecondaryInfoEmbed()
-                break;
-            case "!nft_verify":
-                embeds = getVerificationGuideEmbed()
-                break;
-            case "!nft_blog":
-                embeds = getBlogPostEmbed()
-                break;
-            case "!nft_utility":
-                embeds = getUtilityEmbed()
-                break;
-            case "!nft_sage":
-                embeds = getSageInfoEmbed()
-                break;
-            default:
-                embeds = []
-                break;
-        }
-        try {
-            client.channels.fetch(channelID).then (channel => {
-                channel.send({embeds: embeds})
-            })
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
+    // if(messageContent.startsWith("!")){
+    //     let embeds = []
+    //     switch(messageContent){
+    //         case "!nft_sale":
+    //             embeds = getOriginalSaleInfoEmbed()
+    //             break;
+    //         case "!nft_stats":
+    //             embeds = getNFTStatsEmbed()
+    //             break;
+    //         case "!nft_secondary":
+    //             embeds = getSecondaryInfoEmbed()
+    //             break;
+    //         case "!nft_verify":
+    //             embeds = getVerificationGuideEmbed()
+    //             break;
+    //         case "!nft_blog":
+    //             embeds = getBlogPostEmbed()
+    //             break;
+    //         case "!nft_utility":
+    //             embeds = getUtilityEmbed()
+    //             break;
+    //         case "!nft_sage":
+    //             embeds = getSageInfoEmbed()
+    //             break;
+    //         default:
+    //             embeds = []
+    //             break;
+    //     }
+    //     try {
+    //         client.channels.fetch(channelID).then (channel => {
+    //             channel.send({embeds: embeds})
+    //         })
+    //     }
+    //     catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 })
 
 
