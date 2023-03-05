@@ -32,6 +32,18 @@ const options = {
     body: postData
   };
 
+const AvailableFAQs = {
+    NFTSaleStats: "!nft_sale",
+    NFTStats:  "!nft_stats",
+    SecondaryMarkets:  "!nft_secondary",
+    HolderVerification:  "!nft_verify",
+    NFTBlog:  "!nft_blog",
+    NFTUtility:  "!nft_utility",
+    SageDetails:  "!nft_sage",
+    POAP:  "!faq_poap",
+    TIPCC:  "!faq_tipcc"
+}
+
 async function GetProjectStats(){
     const response = await fetch('https://beta.api.solanalysis.com/rest/get-project-stat-by-name', options)
     return response.json();
@@ -202,31 +214,39 @@ client.on('messageCreate', message =>{
     if(messageContent.startsWith("!")){
         let embeds = []
         switch(messageContent){
-            case "!nft_sale":
+            case "!faq_help":
+                let FAQDescription = ""
+                for(const [key,faq] of Object.entries(AvailableFAQs)){
+                    FAQDescription += faq
+                    FAQDescription += "\n"
+                }
+                embeds = [new Discord.EmbedBuilder().setTitle("List of FAQ commands").setDescription(FAQDescription).setImage('https://cdn.discordapp.com/attachments/1029463141983211593/1048992290674323476/rules2.png').setColor(0x9E1F63)]
+                break;
+            case AvailableFAQs.NFTSaleStats:
                 embeds = NFTInfo.getOriginalSaleInfoEmbed()
                 break;
-            case "!nft_stats":
+            case AvailableFAQs.NFTStats:
                 embeds = NFTInfo.getNFTStatsEmbed()
                 break;
-            case "!nft_secondary":
+            case AvailableFAQs.SecondaryMarkets:
                 embeds = NFTInfo.getSecondaryInfoEmbed()
                 break;
-            case "!nft_verify":
+            case AvailableFAQs.HolderVerification:
                 embeds = NFTInfo.getVerificationGuideEmbed()
                 break;
-            case "!nft_blog":
+            case AvailableFAQs.NFTBlog:
                 embeds = NFTInfo.getBlogPostEmbed()
                 break;
-            case "!nft_utility":
+            case AvailableFAQs.NFTUtility:
                 embeds = NFTInfo.getUtilityEmbed()
                 break;
-            case "!nft_sage":
+            case AvailableFAQs.SageDetails:
                 embeds = NFTInfo.getSageInfoEmbed()
                 break;
-            case "!faq_poap":
+            case AvailableFAQs.POAP:
                 embeds = FAQMessages.getPOAPFAQ()
                 break;
-            case "!faq_tipcc":
+            case AvailableFAQs.TIPCC:
                 embeds = FAQMessages.getTipCCFAQ()
                 break;
             default:
