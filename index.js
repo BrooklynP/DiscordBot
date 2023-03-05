@@ -1,10 +1,10 @@
 import Discord from "discord.js"
 import config from "./config.json" assert { type: "json" };
-// import welcomeMessages from "./welcomeMessages.js"
-import * as welcomeEmbed from "./welcomeMessagesnew.js"
-// import safetyMessages from "./safetyMessages.js"
-// import ruleMessages from "./ruleMessages.js"
-// import *  as NFTInfo from "./NFTInfoMessages" 
+import * as welcomeMessages from "./welcomeMessages.js"
+import * as safetyMessages from "./safetyMessages.js"
+import * as ruleMessages from "./ruleMessages.js"
+import *  as FAQMessages from "./FAQMessages.js" 
+import *  as NFTInfo from "./NFTInfoMessages.js" 
 import http from 'http'
 import fetch from 'node-fetch'
 
@@ -37,12 +37,19 @@ async function GetProjectStats(){
     return response.json();
 }
 
-client.on('ready',  (clientReady) =>{
+function UpdateProjectFloorPrice(){
     GetProjectStats().then((stats=>{
-        console.log(stats);     
         // client.user.setPresence({activities:[{name: 'Floor Price: ' + stats.project_stats[0].floor_price + 'SOL'}]})
         client.user.setActivity('Floor Price: ' + stats.project_stats[0].floor_price + 'SOL')
+        console.log("Set FP to " + stats.project_stats[0].floor_price + "SOL")
     }))
+}
+
+client.on('ready',  (clientReady) =>{
+    UpdateProjectFloorPrice()
+    setInterval(() => {
+        UpdateProjectFloorPrice()
+    }, 900000);
     // const request = http.request(options, (response) => {
     //     response.setEncoding('utf8');
     
@@ -149,7 +156,7 @@ client.on('ready',  (clientReady) =>{
         // client.channels.fetch(config.WELCOME_CHANNEL_ID).then(channel => 
         // {
         //     channel.messages.fetch('1035236461924077588').then(message =>{
-        //         message.edit({embeds: welcomeEmbed.welcomeEmbed()})
+        //         message.edit({embeds: welcomeMessages.welcomeEmbed()})
         //     })
         // });
 })
@@ -157,10 +164,29 @@ client.on('ready',  (clientReady) =>{
 client.on('messageCreate', message =>{
     const messageContent = message.content.toLowerCase()
     const channelID = message.channelId
+    const senderID = message.author.id
 
+    if (senderID == 1029393319924609115) {
+        return
+    }
     if (messageContent.includes(" gm ") || messageContent.startsWith("gm") || messageContent.endsWith("gm")) {
         message.react('👋')
         message.react('845061306259734578')
+    }
+    if (messageContent.includes("bat chan") || messageContent.includes("bat-chan") ) {
+        message.react('👀')
+    }
+    if (messageContent.includes(" dru ") || messageContent.startsWith("dru") || messageContent.endsWith("dru")) {
+        message.reply('Ban Dru')
+    }
+    if (messageContent.includes(" frimm ") || messageContent.startsWith("frimm") || messageContent.endsWith("frimm")) {
+        message.reply('Ban Frimm')
+    }
+    if (messageContent.includes(" borky ") || messageContent.startsWith("borky") || messageContent.endsWith("borky")) {
+        message.reply('Ban Borky')
+    }
+    if (messageContent.includes("spammu")) {
+        message.reply('Spammu isn\'t real')
     }
     if (messageContent.includes(" gn ") || messageContent.startsWith("gn") || messageContent.endsWith("gn")) {
         message.react('845061305874513931')
@@ -173,43 +199,49 @@ client.on('messageCreate', message =>{
         message.reply('pong')
     }
 
-    // if(messageContent.startsWith("!")){
-    //     let embeds = []
-    //     switch(messageContent){
-    //         case "!nft_sale":
-    //             embeds = getOriginalSaleInfoEmbed()
-    //             break;
-    //         case "!nft_stats":
-    //             embeds = getNFTStatsEmbed()
-    //             break;
-    //         case "!nft_secondary":
-    //             embeds = getSecondaryInfoEmbed()
-    //             break;
-    //         case "!nft_verify":
-    //             embeds = getVerificationGuideEmbed()
-    //             break;
-    //         case "!nft_blog":
-    //             embeds = getBlogPostEmbed()
-    //             break;
-    //         case "!nft_utility":
-    //             embeds = getUtilityEmbed()
-    //             break;
-    //         case "!nft_sage":
-    //             embeds = getSageInfoEmbed()
-    //             break;
-    //         default:
-    //             embeds = []
-    //             break;
-    //     }
-    //     try {
-    //         client.channels.fetch(channelID).then (channel => {
-    //             channel.send({embeds: embeds})
-    //         })
-    //     }
-    //     catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+    if(messageContent.startsWith("!")){
+        let embeds = []
+        switch(messageContent){
+            case "!nft_sale":
+                embeds = NFTInfo.getOriginalSaleInfoEmbed()
+                break;
+            case "!nft_stats":
+                embeds = NFTInfo.getNFTStatsEmbed()
+                break;
+            case "!nft_secondary":
+                embeds = NFTInfo.getSecondaryInfoEmbed()
+                break;
+            case "!nft_verify":
+                embeds = NFTInfo.getVerificationGuideEmbed()
+                break;
+            case "!nft_blog":
+                embeds = NFTInfo.getBlogPostEmbed()
+                break;
+            case "!nft_utility":
+                embeds = NFTInfo.getUtilityEmbed()
+                break;
+            case "!nft_sage":
+                embeds = NFTInfo.getSageInfoEmbed()
+                break;
+            case "!faq_poap":
+                embeds = FAQMessages.getPOAPFAQ()
+                break;
+            case "!faq_tipcc":
+                embeds = FAQMessages.getTipCCFAQ()
+                break;
+            default:
+                embeds = []
+                break;
+        }
+        try {
+            client.channels.fetch(channelID).then (channel => {
+                channel.send({embeds: embeds})
+            })
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
 })
 
 
