@@ -22,7 +22,7 @@ const embed4 = new Discord.EmbedBuilder()
 .setColor(0xFF4724)
 .setTitle('Verifying with Matrica')
 .setDescription("We are now using Matrica for holder role verification!")
-.addFields({name: 'Full Guide', value: 'https://docs.matrica.io/guides/user-guide', inline: true})
+.addFields({name: 'Full Guide', value: 'https://docs.matrica.io/guides/user-guide/getting-started', inline: true})
 .setImage('https://media.discordapp.net/attachments/875480807232380949/963760758603276318/Super_Invisible_Line.png?width=962&height=2 ')
 
 
