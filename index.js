@@ -254,9 +254,11 @@ client.on('messageCreate', message =>{
                 break;
         }
         try {
-            client.channels.fetch(channelID).then (channel => {
-                channel.send({embeds: embeds})
-            })
+            if (embeds.length > 0){
+                client.channels.fetch(channelID).then (channel => {
+                    channel.send({embeds: embeds})
+                })
+            }
         }
         catch (error) {
             console.log(error)
