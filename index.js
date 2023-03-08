@@ -1,6 +1,7 @@
 import Discord from "discord.js"
 import config from "./config.json" assert { type: "json" };
 import * as welcomeMessages from "./welcomeMessages.js"
+import * as welcomeMessagesGerman from "./welcomeMessagesGerman.js"
 import * as safetyMessages from "./safetyMessages.js"
 import * as ruleMessages from "./ruleMessages.js"
 import *  as FAQMessages from "./FAQMessages.js"
@@ -170,17 +171,51 @@ function HandleFAQCommands(messageContent) {
     }
 }
 
+function createOnboardingEmbed(channel) {
+    return channel.send({ embeds: welcomeMessages.onboardingEmbed(), components: welcomeMessages.onboardingComponents() })
+}
+
+function handleLanguageSelection(channel, messageID){
+    const MessageButtonCollector = channel.createMessageComponentCollector()
+    MessageButtonCollector.on('collect', interaction => {
+        // const member = interaction.guild.members.cache.get(interaction.user.id);
+        if (interaction.message.id === messageID) {
+            if(interaction.values[0] === "German"){
+            interaction.reply({   embeds: [{
+                title: "Willkommen ",
+                description: "You chose " + interaction.values[0]
+             }, ...welcomeMessagesGerman.welcomeEmbed()], ephemeral: true});
+            } else {
+                interaction.reply({   embeds: [{
+                    title: "Welcome",
+                    description: "You chose " + interaction.values[0]
+                 }, ...welcomeMessages.welcomeEmbed()], ephemeral: true});
+            }
+        }
+    })
+}
+
 client.on('ready', (clientReady) => {
-    UpdateProjectFloorPrice()
-    setInterval(() => {
-        UpdateProjectFloorPrice()
-    }, 900000);
+    // UpdateProjectFloorPrice()
+    // setInterval(() => {
+    //     UpdateProjectFloorPrice()
+    // }, 900000);
 })
 
 client.on('messageCreate', message => {
     const messageContent = message.content.toLowerCase()
     const channelID = message.channelId
     const senderID = message.author.id
+
+    if (messageContent == "!onboardingtest") {
+        //1023520486132563988 server makeover channel
+        client.channels.fetch(channelID).then(channel => {
+            createOnboardingEmbed(channel).then((response) => {
+                let onboardingMessageID = response.id
+                handleLanguageSelection(channel, onboardingMessageID)
+            })
+        });
+    }
 
     if (senderID == 1029393319924609115n) {
         return

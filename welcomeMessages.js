@@ -1,4 +1,4 @@
-import Discord from "discord.js"
+import Discord, { SelectMenuBuilder } from "discord.js"
 //https://cdn.discordapp.com/attachments/1023520486132563988/1082030516468973628/Brigade_banner.png
 export function welcomeEmbed() {
     const embed0 = new Discord.EmbedBuilder()
@@ -52,4 +52,22 @@ export function welcomeEmbed() {
 
         Thank you for joining our community! If you have any questions or concerns, please reach out to a member of our team. <:BatFistBump:931627619114422292>`)
     return [embed0, embed1, embed2, embed3, embed4, embed5]
+}
+
+export function onboardingEmbed() {
+    const embed1 = new Discord.EmbedBuilder()
+        .setColor(0xFF4724)
+        .setTitle('👋 Welcome to the BAT Brigade!')
+        // .setImage('https://cdn.discordapp.com/attachments/1029463141983211593/1029463175663452210/90193704_p0_master1200.png')
+        .setDescription(`Hello! Hola! Bonjour! Ciao! Guten Tag! Olá! Nǐ hǎo! γεια! こんにちは! Приветствую!`)
+    return [embed1];
+}
+export function onboardingComponents() {
+    const componentRow = new Discord.ActionRowBuilder()
+    // .addComponents(new Discord.ButtonBuilder().setStyle(1).setCustomId("test").setLabel("Test"))
+    .addComponents(new Discord.SelectMenuBuilder().setCustomId("testSlide").setPlaceholder("Select Language").setOptions([
+        {label:"English", value:"English"},
+        {label:"Deutsch", value:"German"}
+    ]))
+    return [componentRow]
 }
