@@ -117,7 +117,7 @@ function updateImportantInfoChannel() {
     });
 }
 
-function HandleFAQCommands(messageContent) {
+function HandleFAQCommands(messageContent, channelID) {
     let embeds = []
     switch (messageContent) {
         case "!faq_help":
@@ -180,16 +180,19 @@ function handleLanguageSelection(channel, messageID){
     MessageButtonCollector.on('collect', interaction => {
         // const member = interaction.guild.members.cache.get(interaction.user.id);
         if (interaction.message.id === messageID) {
+            const member = interaction.guild.members.cache.get(interaction.user.id);
             if(interaction.values[0] === "German"){
-            interaction.reply({   embeds: [{
-                title: "Willkommen ",
-                description: "You chose " + interaction.values[0]
-             }, ...welcomeMessagesGerman.welcomeEmbed()], ephemeral: true});
+                interaction.reply({ embeds: welcomeMessagesGerman.welcomeEmbed(), ephemeral: true});
+
+                let roleToGive = interaction.guild.roles.cache.get('1025506875279683684')
+                member.roles.add(roleToGive)
+                roleToGive = interaction.guild.roles.cache.get(config.MEMBER_ROLE_ID)
+                member.roles.add(roleToGive)
             } else {
-                interaction.reply({   embeds: [{
-                    title: "Welcome",
-                    description: "You chose " + interaction.values[0]
-                 }, ...welcomeMessages.welcomeEmbed()], ephemeral: true});
+                interaction.reply({   embeds: welcomeMessages.welcomeEmbed(), ephemeral: true});
+
+                const roleToGive = interaction.guild.roles.cache.get(config.MEMBER_ROLE_ID)
+                member.roles.add(roleToGive)
             }
         }
     })
@@ -251,7 +254,7 @@ client.on('messageCreate', message => {
     }
 
     if (messageContent.startsWith("!")) {
-        HandleFAQCommands(messageContent)
+        HandleFAQCommands(messageContent, channelID)
     }
 })
 
