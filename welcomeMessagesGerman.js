@@ -52,7 +52,7 @@ export function welcomeEmbed() {
         ⦁ Nach Deiner Verifizierung schau Dir auch unseren Rollen-Kanal an, in dem Du aussuchen kannst, für was Du gerne gepingt werden möchtest und erfahre mehr über den Server.
 
         Danke, dass Du unserer Community beigetreten bist! Solltest Du irgend welche Fragen, oder Bedenken haben, melde Dich bitte bei jemandem aus unserem Team. <:BatFistBump:931627619114422292>`)
-    return [embed0, embed1, embed2, embed3, embed4, embed5]
+    return [embed0, embed1, embed2, embed3, embed4]
 }
 
 export function onboardingEmbed() {
