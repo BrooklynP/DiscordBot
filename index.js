@@ -20,13 +20,20 @@ const client = new Discord.Client({
 client.login(config.BOT_TOKEN);
 
 const postData = JSON.stringify({ "condition": { "display_name": "BAT x Adam Ape for Brave" } })
-const options = {
+const ProjectStatsOptions = {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
         'Authorization': config.HYPERSPACE_AUTH_TOKEN
     },
     body: postData
+};
+
+const BatStatsOptions = {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    }
 };
 
 const AvailableFAQs = {
@@ -38,11 +45,32 @@ const AvailableFAQs = {
     NFTUtility: "!nft_utility",
     SageDetails: "!nft_sage",
     POAP: "!faq_poap",
-    TIPCC: "!faq_tipcc"
+    TIPCC: "!faq_tipcc",
+    MAUDAU: "!mdau"
+}
+
+const MonthMap = {
+    "jan": "01",
+    "feb": "02",
+    "mar": "03",
+    "apr": "04",
+    "may": "05",
+    "jun": "06",
+    "jul": "07",
+    "aug": "08",
+    "sep": "09",
+    "oct": "10",
+    "nov": "11",
+    "dec": "12"
 }
 
 async function GetProjectStats() {
-    const response = await fetch('https://beta.api.solanalysis.com/rest/get-project-stat-by-name', options)
+    const response = await fetch('https://beta.api.solanalysis.com/rest/get-project-stat-by-name', ProjectStatsOptions)
+    return response.json();
+}
+
+async function GetBATStats() {
+    const response = await fetch('https://brave.com/transparency-data.json', BatStatsOptions)
     return response.json();
 }
 
@@ -175,21 +203,21 @@ function createOnboardingEmbed(channel) {
     return channel.send({ embeds: welcomeMessages.onboardingEmbed(), components: welcomeMessages.onboardingComponents() })
 }
 
-function handleLanguageSelection(channel, messageID){
+function handleLanguageSelection(channel, messageID) {
     const MessageButtonCollector = channel.createMessageComponentCollector()
     MessageButtonCollector.on('collect', interaction => {
         // const member = interaction.guild.members.cache.get(interaction.user.id);
         if (interaction.message.id === messageID) {
             const member = interaction.guild.members.cache.get(interaction.user.id);
-            if(interaction.values[0] === "German"){
-                interaction.reply({ embeds: welcomeMessagesGerman.welcomeEmbed(), ephemeral: true});
+            if (interaction.values[0] === "German") {
+                interaction.reply({ embeds: welcomeMessagesGerman.welcomeEmbed(), ephemeral: true });
 
                 let roleToGive = interaction.guild.roles.cache.get('1025506875279683684')
                 member.roles.add(roleToGive)
                 roleToGive = interaction.guild.roles.cache.get(config.MEMBER_ROLE_ID)
                 member.roles.add(roleToGive)
             } else {
-                interaction.reply({   embeds: welcomeMessages.welcomeEmbed(), ephemeral: true});
+                interaction.reply({ embeds: welcomeMessages.welcomeEmbed(), ephemeral: true });
 
                 const roleToGive = interaction.guild.roles.cache.get(config.MEMBER_ROLE_ID)
                 member.roles.add(roleToGive)
@@ -252,7 +280,35 @@ client.on('messageCreate', message => {
         console.log("pong");
         message.reply('pong')
     }
-
+    if (messageContent.includes("!mdau")) {
+        let month = "02";
+        let year = "2023"
+        if (messageContent.length > 8) {
+            if (message.content.length > 12) {
+                console.log(messageContent.substring(10, 14))
+                let newYear = messageContent.substring(10, 14)
+                console.log(newYear)
+                year = newYear
+            }
+            console.log(messageContent.substring(6, 9))
+            let newMonth = MonthMap[messageContent.substring(6, 9)]
+            console.log(newMonth)
+            if (newMonth) {
+                month = newMonth
+            }
+        }
+        GetBATStats().then(BatStats => {
+            // console.log(BatStats);
+            let date = year + "-" + month
+            console.log(date);
+            if (BatStats.users[date]) {
+                let mau = BatStats.users[date].mau
+                let dau = BatStats.users[date].dau
+                message.reply("MAU for "+ date + " was: " + (mau / 1000000) + "m and the DAU was: " + (dau / 1000000) + "m")
+            }
+        })
+        return
+    }
     if (messageContent.startsWith("!")) {
         HandleFAQCommands(messageContent, channelID)
     }
